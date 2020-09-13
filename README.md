@@ -25,7 +25,7 @@ Then install the dependencies
 pip install requirements.txt
 ```
 
-Finally you two choices, the first is to set your driver path in the code when creating an instance of ScreenShutter:
+Finally you have two choices, the first is to set your driver path in the code when creating an instance of ScreenShutter:
 ```bash
 ScreenShutter(driver_path="path-to-executable-driver")
 ```
