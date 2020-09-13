@@ -18,14 +18,14 @@ The chrome driver allows Web Generator manage instances of the browser to take t
 # Installation
 Simply git clone this repository or download the zip folder: 
 ```bash
-git clone https://github.com/agsoto/webgen.git
+git clone https://github.com/agsoto/webgenerator.git
 ```
 Then install the dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-Finally you two choices, the first is to set your driver path in the code when creating an instance of ScreenShutter:
+Finally you have two choices, the first is to set your driver path in the code when creating an instance of ScreenShutter:
 ```bash
 ScreenShutter(driver_path="path-to-executable-driver")
 ```
