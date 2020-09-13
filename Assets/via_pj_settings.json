@@ -1,0 +1,203 @@
+{
+    "_via_settings": {
+        "ui": {
+            "annotation_editor_height": 25,
+            "annotation_editor_fontsize": 0.8,
+            "leftsidebar_width": 18,
+            "image_grid": {
+                "img_height": 80,
+                "rshape_fill": "none",
+                "rshape_fill_opacity": 0.3,
+                "rshape_stroke": "yellow",
+                "rshape_stroke_width": 2,
+                "show_region_shape": true,
+                "show_image_policy": "all"
+            },
+            "image": {
+                "region_label": "__via_region_id__",
+                "region_color": "__via_default_region_color__",
+                "region_label_font": "10px Sans",
+                "on_image_annotation_editor_placement": "NEAR_REGION"
+            }
+        },
+        "core": {
+            "buffer_size": 18,
+            "filepath": {},
+            "default_filepath": ""
+        },
+        "project": {
+            "name": "web_gen_pj"
+        }
+    },
+    "_via_img_metadata": {
+        "rw_0.png35274": {
+            "filename": "rw_0.png",
+            "size": 35274,
+            "regions": [{
+                "region_attributes": {
+                    "type": "navbar"
+                },
+                "shape_attributes": {
+                    "height": 66,
+                    "name": "rect",
+                    "width": 783,
+                    "x": 0,
+                    "y": 0
+                }
+            }, {
+                "region_attributes": {
+                    "type": "header"
+                },
+                "shape_attributes": {
+                    "height": 210,
+                    "name": "rect",
+                    "width": 783,
+                    "x": 0,
+                    "y": 66
+                }
+            }, {
+                "region_attributes": {
+                    "type": "featured_items"
+                },
+                "shape_attributes": {
+                    "height": 308,
+                    "name": "rect",
+                    "width": 783,
+                    "x": 0,
+                    "y": 292
+                }
+            }],
+            "file_attributes": {
+                "caption": "",
+                "public_domain": "yes",
+                "image_url": "",
+                "layout_type": "4"
+            }
+        },
+        "rw_1.png39128": {
+            "filename": "rw_1.png",
+            "size": 39128,
+            "regions": [{
+                "region_attributes": {
+                    "type": "header"
+                },
+                "shape_attributes": {
+                    "height": 132,
+                    "name": "rect",
+                    "width": 783,
+                    "x": 0,
+                    "y": 0
+                }
+            }, {
+                "region_attributes": {
+                    "type": "sidebar"
+                },
+                "shape_attributes": {
+                    "height": 468,
+                    "name": "rect",
+                    "width": 144,
+                    "x": 0,
+                    "y": 132
+                }
+            }, {
+                "region_attributes": {
+                    "type": "cards"
+                },
+                "shape_attributes": {
+                    "height": 452,
+                    "name": "rect",
+                    "width": 638,
+                    "x": 145,
+                    "y": 148
+                }
+            }],
+            "file_attributes": {
+                "caption": "",
+                "public_domain": "yes",
+                "image_url": "",
+                "layout_type": "2"
+            }
+        },
+        "rw_2.png40936": {
+            "filename": "rw_2.png",
+            "size": 40936,
+            "regions": [{
+                "region_attributes": {
+                    "type": "header"
+                },
+                "shape_attributes": {
+                    "height": 186,
+                    "name": "rect",
+                    "width": 783,
+                    "x": 0,
+                    "y": 0
+                }
+            }, {
+                "region_attributes": {
+                    "type": "descriptive_items"
+                },
+                "shape_attributes": {
+                    "height": 398,
+                    "name": "rect",
+                    "width": 753,
+                    "x": 15,
+                    "y": 202
+                }
+            }],
+            "file_attributes": {
+                "caption": "",
+                "public_domain": "yes",
+                "image_url": "",
+                "layout_type": "3"
+            }
+        }
+    },
+    "_via_attributes": {
+        "region": {
+            "type": {
+                "type": "dropdown",
+                "description": "Type of HTML element / component",
+                "options": {
+                    "header": "",
+                    "navbar": "",
+                    "sidebar": "",
+                    "footer": "",
+                    "carousel": "",
+                    "featured_items": "",
+                    "cards": "",
+                    "descriptive_items": "",
+                    "mix": "",
+                    "tabs": "",
+                    "call_to_action": "",
+                    "heading": "",
+                    "paragraph": "",
+                    "collapse": "",
+                    "unknown": ""
+                },
+                "default_options": {
+                    "unknown": true
+                }
+            }
+        },
+        "file": {
+            "public_domain": {
+                "type": "radio",
+                "description": "",
+                "options": {
+                    "yes": "Yes",
+                    "no": "No"
+                },
+                "default_options": {
+                    "yes": true
+                }
+            },
+            "layout_type": {
+                "type": "text",
+                "description": "Layout of the HTML",
+                "default_value": ""
+            }
+        }
+    },
+    "_via_data_format_version": "2.0.10",
+    "_via_image_id_list": ["rw_0.png35274", "rw_1.png39128", "rw_2.png40936"]
+}

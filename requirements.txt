@@ -1,0 +1,11 @@
+selenium==3.141.0
+colorharmonies==1.0.5
+dominate==2.4.0
+utils==1.0.1
+python_lorem==1.1.2
+palettable==3.3.0
+webdriver_manager==2.3.0
+libsass==0.20.1
+lorem==0.1.1
+Pillow==7.2.0
+Screenshot==1.0.0
