@@ -19,6 +19,7 @@ The chrome driver allows Web Generator manage instances of the browser to take t
 Simply git clone this repository or download the zip folder: 
 ```bash
 git clone https://github.com/agsoto/webgenerator.git
+cd webgenerator
 ```
 Then install the dependencies
 ```bash
