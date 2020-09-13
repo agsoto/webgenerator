@@ -22,7 +22,7 @@ git clone https://github.com/agsoto/webgen.git
 ```
 Then install the dependencies
 ```bash
-pip install requirements.txt
+pip install -r requirements.txt
 ```
 
 Finally you two choices, the first is to set your driver path in the code when creating an instance of ScreenShutter:
