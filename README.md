@@ -1,3 +1,12 @@
+# WebGenerator
+Generate easily probabilistic dataset of web interfaces and content. The datasetter allows you to generate HTML files, their corresponding screenshots and a JSON file with the labeled HTML elements. This way you can train supervised and non-supervised models. You can also set probabilities and options generation of the batch to suit your needs.
+
+## Some selected examples
+<img src="https://i.imgur.com/rlsanuU.png" alt="Example 1" width="300">
+<img src="https://i.imgur.com/GnxOmgp.png" alt="Example 2" width="300">
+<img src="https://i.imgur.com/vELUSQZ.png" alt="Example 3" width="300">
+
+
 # Requirements
 * Python >= 3.7 ([download here](https://www.python.org/downloads/))
 * Pip >= 20.0.2 ([installation instructions here](https://pip.pypa.io/en/stable/installing/))
@@ -35,5 +44,5 @@ And the second is to [set your enviroment variables](https://zwbetz.com/download
 ## Execution
 There's a code example of the use of the generator in the Main.py file. Once you're all set just run:
 ```bash
-> python ./Main
+python ./Main
 ```
