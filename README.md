@@ -1,10 +1,16 @@
 # WebGenerator
 Generate easily probabilistic dataset of web interfaces and content. The datasetter allows you to generate HTML files, their corresponding screenshots and a JSON file with the labeled HTML elements. This way you can train supervised and non-supervised models. You can also set probabilities and options generation of the batch to suit your needs.
 
+<img src="https://imgur.com/a6o62Da.png" alt="Example 3" width="250">
+
+This development is kindly supported by the awesome [SDAS Group](https://www.sdas-group.com/).
+
 ## Some selected examples
 <img src="https://i.imgur.com/rlsanuU.png" alt="Example 1" width="300">
 <img src="https://i.imgur.com/GnxOmgp.png" alt="Example 2" width="300">
 <img src="https://i.imgur.com/vELUSQZ.png" alt="Example 3" width="300">
+
+A full dataset of 1000 elements with 800x600 size generated with the tool can be [downloaded here](https://drive.google.com/file/d/1qjjkD57NaW9l8Oa16icjYRCgn2TDa0bW/view?usp=sharing).
 
 
 # Requirements
