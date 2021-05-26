@@ -40,12 +40,13 @@ Then install the dependencies
 ```bash
 pip install -r requirements.txt
 ```
+Since screen capturing feature depends on Selenium Driver, you should add the path to the system's enviroment variables. Look how to [set your enviroment variables](https://zwbetz.com/download-chromedriver-binary-and-add-to-your-path-for-automated-functional-testing/) on Windows and Mac. Or if your'e using linux you can create a symbolic link: 
+`ln -s path-to-executable-driver chromedriver`.
 
-Finally you have two choices, the first is to set your driver path in the code when creating an instance of ScreenShutter:
+However if you don't want to add an eviroment variable, when using the class ScreenShutter, you can set the path to the driver this way:
 ```bash
 ScreenShutter(driver_path="path-to-executable-driver")
 ```
-And the second is to [set your enviroment variables](https://zwbetz.com/download-chromedriver-binary-and-add-to-your-path-for-automated-functional-testing/) for Windows and Mac. And for linux you can create a symbolic link `ln -s path-to-executable-driver chromedriver`.
     
 ## Execution
 There's a code example of the use of the generator in the Main.py file. Once you're all set just run:
