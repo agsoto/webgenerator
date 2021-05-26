@@ -47,9 +47,11 @@ However if you don't want to add an eviroment variable, when using the class Scr
 ```bash
 ScreenShutter(driver_path="path-to-executable-driver")
 ```
+This optional parameter could be set as it appears in [line 18 of Main.py](https://github.com/agsoto/webgenerator/blob/master/Main.py#L18) file.
+
     
 ## Execution
-There's a code example of the use of the generator in the Main.py file. Once you're all set just run:
+There's a code example of the use of the generator in the [Main.py](https://github.com/agsoto/webgenerator/blob/master/Main.py) file. Once you're all set just run:
 ```bash
 python ./Main
 ```
