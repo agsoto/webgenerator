@@ -55,4 +55,13 @@ This optional parameter could be set as it appears in [line 18 of Main.py](https
 There's a code example of the use of the generator in the [Main.py](https://github.com/agsoto/webgenerator/blob/master/Main.py) file. Once you're all set just run:
 ```bash
 python ./Main
+
 ```
+
+## Potential Applications
+
+This dataset has a potential applications for will generate GUI web, [here] (https://github.com/agsoto/webgenerator/tree/master/PotentialApplications) you will find three deep learning models examples.
+
+- GAN: To generate GUI web images through web generator images.
+- Mask RCNN: To detect components in web page's images.
+- Pix2Pix: To generate GUI web images through images's edges (canny mask).
