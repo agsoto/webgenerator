@@ -63,5 +63,17 @@ python ./Main
 This dataset has a potential applications for will generate GUI web,       [here](https://github.com/agsoto/webgenerator/tree/master/PotentialApplications) you will find three deep learning models examples.
 
 - GAN: To generate GUI web images through web generator images.
-- Mask RCNN: To detect components in web page's images.
+- Fast RCNN: To detect components in web page's images.
 - Pix2Pix: To generate GUI web images through images's edges (canny mask).
+
+### GAN
+
+<img src='https://raw.githubusercontent.com/agsoto/webgenerator/master/PotentialApplications/Images/gan.png' />
+
+### Fast RCNN
+
+<img src='https://raw.githubusercontent.com/agsoto/webgenerator/master/PotentialApplications/Images/frcnn.png' width=60%/>
+
+### Pix2Pix
+
+<img src='https://raw.githubusercontent.com/agsoto/webgenerator/master/PotentialApplications/Images/p2p.png' width=60%/>
