@@ -60,7 +60,7 @@ python ./Main
 
 ## Potential Applications
 
-This dataset has a potential applications for will generate GUI web, [here] (https://github.com/agsoto/webgenerator/tree/master/PotentialApplications) you will find three deep learning models examples.
+This dataset has a potential applications for will generate GUI web,       [here](https://github.com/agsoto/webgenerator/tree/master/PotentialApplications) you will find three deep learning models examples.
 
 - GAN: To generate GUI web images through web generator images.
 - Mask RCNN: To detect components in web page's images.
