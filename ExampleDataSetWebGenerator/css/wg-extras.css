@@ -1,0 +1,162 @@
+.placeholder {
+    background-color: rgb(189, 189, 189);
+    display: flex;
+}
+
+.placeholder > * {
+    align-self: center;
+    text-align: center;
+    width: 100%;
+}
+
+.text-black {
+  color: rgba(14, 14, 14);
+}
+
+/* TODO: Delete .navbar fixes, is likely they don't apply anymore but we have to check */
+@media (max-height: 900px) { 
+    .navbar {
+        min-height: 3vh;
+    }
+}
+
+@media (max-height: 768px) { 
+    .navbar {
+        min-height: 4vh;
+    }
+}
+
+@media (max-height: 640px) { 
+    .navbar {
+        min-height: 6vh;
+    }
+}
+
+@media (max-height: 480px) { 
+    .navbar {
+        min-height: 11vh;
+    }
+}
+
+@media (max-height: 900px) and (max-width: 991px) { 
+    .navbar {
+        min-height: 9vh;
+    }
+}
+
+@media (max-height: 768px) and (max-width: 991px) { 
+    .navbar {
+        min-height: 9vh;
+    }
+}
+
+@media (max-height: 640px) and (max-width: 991px) { 
+    .navbar {
+        min-height: 11vh;
+    }
+}
+
+@media (max-height: 480px) and (max-width: 991px) { 
+    .navbar {
+        min-height: 15vh;
+    }
+}
+
+@media (max-height: 352px) and (max-width: 991px) { 
+    .navbar {
+        min-height: 20vh;
+    }
+}
+
+
+/*! Extracted from official website
+ * Start Bootstrap - Simple Sidebar (https://startbootstrap.com/template-overviews/simple-sidebar)
+ * Copyright 2013-2019 Start Bootstrap
+ * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap-simple-sidebar/blob/master/LICENSE)
+ */
+ body {
+    overflow-x: hidden;
+  }
+  
+  #sidebar-wrapper {
+    /* min-height: 100vh; */
+    /* margin-left: -15rem; */
+    display: none;
+    -webkit-transition: margin .25s ease-out;
+    -moz-transition: margin .25s ease-out;
+    -o-transition: margin .25s ease-out;
+    transition: margin .25s ease-out;
+  }
+  
+  #sidebar-wrapper .sidebar-heading {
+    padding: 0.875rem 1.25rem;
+    font-size: 1.2rem;
+  }
+  
+  #sidebar-wrapper .list-group {
+    /* width: 15rem; */
+  }
+  
+  #sidebar-wrapper .list-group-item {
+    background: inherit;
+    color: inherit;
+  }
+  
+  #page-content-wrapper {
+    min-width: 100vw;
+  }
+  
+  #wrapper.toggled #sidebar-wrapper {
+    margin-left: 0;
+  }
+  
+   /* Small devices (landscape phones, 576px and up) */
+  @media (min-width: 576px) { 
+  
+  }
+  
+   /* Medium devices (tablets, 768px and up) */
+  @media (min-width: 768px) { 
+    #sidebar-wrapper {
+      margin-left: 0;
+      display: block;
+    }
+    
+    #sidebar-wrapper .list-group {
+      min-width: 7vw !important;
+      max-width: 20vw;
+    }
+  
+    #page-content-wrapper {
+      min-width: 0;
+      width: 100%;
+    }
+  
+    #wrapper.toggled #sidebar-wrapper {
+      /* margin-left: -30rem; */
+      /* display: none; */
+    }
+  }
+  
+   /* Large devices (desktops, 992px and up) */
+  @media (min-width: 992px) { 
+    #sidebar-wrapper .list-group {
+      min-width: 7vw;
+      max-width: 30vw;
+    }
+  }
+  
+   /* Extra large devices (large desktops, 1200px and up) */
+  @media (min-width: 1200px) { 
+    #sidebar-wrapper .list-group {
+      min-width: 6vw;
+      max-width: 20vw;
+    }
+  }
+  
+  @media (min-width: 1900px) { 
+    #sidebar-wrapper .list-group {
+      min-width: 5vw;
+      max-width: 15vw;
+    }
+  }
