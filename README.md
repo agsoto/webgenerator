@@ -70,10 +70,25 @@ This dataset has a potential applications for will generate GUI web,       [here
 
 <img src='https://raw.githubusercontent.com/agsoto/webgenerator/master/PotentialApplications/Images/gan.png' />
 
-### Fast RCNN
+### Faster RCNN
 
 <img src='https://raw.githubusercontent.com/agsoto/webgenerator/master/PotentialApplications/Images/frcnn.png' width=60%/>
 
 ### Pix2Pix
 
 <img src='https://raw.githubusercontent.com/agsoto/webgenerator/master/PotentialApplications/Images/p2p.png' width=60%/>
+
+# Generation Probabilities
+The parameters for the WebLayoutProbabilities object (that is used for the generation), are described below.
+| Param # | Name               | Type    | Description                                                                                                                             |
+|---------|--------------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------|
+| 1       | with_sidebar_p     | float   | Probability that the Sidebar is present                                                                                                 |
+| 2       | with_header_p      | float   | Probability that the Header is present                                                                                                  |
+| 3       | with_navbar_p      | float   | Probability that the Navbar is present                                                                                                  |
+| 4       | with_footer_p      | float   | Probability that the Footer is present                                                                                                  |
+| 5       | layouts_p          | list[4] | List with the probabilities for each possible layout. The sum of the probabilities should be 1                                         |
+| 6       | boxed_body_p       | float   | Probability that the page's Body is boxed inside a container                                                                            |
+| 7       | big_header_p       | float   | Probability of having a big header (A big header is considered 50% or more of the screen height)                                        |
+| 8       | sidebar_first_p    | float   | Probability of the Sidebar being at the left side of the Body                                                                           |
+| 9       | navbar_first_p     | float   | Probability of the Navbar being above the header                                                                                        |
+| 10      | bg_color_classes_p | list[3] | List with the probabilities for the combination of CSS Bootstrap's background color classes. The sum of the probabilities should be 1  |
