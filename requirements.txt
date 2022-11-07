@@ -1,10 +1,9 @@
-selenium==3.141.0
+selenium==4.6.0
 colorharmonies==1.0.5
-dominate==2.4.0
+dominate==2.7.0
 utils==1.0.1
-python_lorem==1.1.2
+python_lorem==1.2.0
 palettable==3.3.0
-webdriver_manager==2.3.0
-libsass==0.20.1
-Pillow==7.2.0
-Selenium-Screenshot
+webdriver_manager==3.8.4
+libsass==0.21.0
+Pillow==9.3.0
