@@ -41,7 +41,7 @@ class RandomHtml: #TODO: Remove wg-detect classes, not in use anymore
 
 	def element_creator(ele,section_iteration, with_annotations=False):
 		if ele == wcc.Mixable.Heading: #TODO: Populate with RandomContent
-			h1(lorem.get_sentence(1) , cls=("wg-detect" if with_annotations else ""), data_wg_type="heading")
+			h1(lorem.get_sentence(count=1) , cls=("wg-detect" if with_annotations else ""), data_wg_type="heading")
 		elif ele == wcc.Mixable.Paragraph: #TODO: Populate with RandomContent
 			p(lorem.get_paragraph(word_range=(6,8), sentence_range=(6,8)), cls=("wg-detect" if with_annotations else ""), data_wg_type="paragraph")
 		# elif ele == "button":
@@ -135,7 +135,7 @@ class RandomHtml: #TODO: Remove wg-detect classes, not in use anymore
 				br()
 				#make_placeholder(img_width, img_height, align_class, False, True)
 				PlaceholderElement(img_width,img_height, True, cls=align_class+" m-2"+shadow_class)
-				span(lorem.get_paragraph(paragraph_length))
+				span(lorem.get_paragraph(count=paragraph_length))
 
 	def cards(n_items, with_annotations=False):
 		col = div(cls="row"+" wg-detect" if with_annotations else "", data_wg_type = "cards").add(div(cls="col"))

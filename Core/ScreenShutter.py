@@ -1,10 +1,9 @@
 import glob
 import os
-from PIL import Image
 from selenium import webdriver 
+from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as expected_conditions
 from webdriver_manager.firefox import GeckoDriverManager
-from Screenshot import Screenshot_Clipping
 from StyleManager.ColorManager import ColorManager
 import fnmatch
 from xml.sax.saxutils import unescape, escape
@@ -37,6 +36,7 @@ class ScreenShutter:
 
 		options = webdriver.ChromeOptions()
 		options.headless = True 
+		
 		if self.driver_path != "":
 			driver = webdriver.Chrome(options=options, executable_path=self.driver_path)
 		else:
@@ -48,11 +48,8 @@ class ScreenShutter:
 		annotations = {}
 		imgs_metadatas = {}
 		img_id_list = []
-		
-		full_screenshutter = Screenshot_Clipping.Screenshot()
 
 		scripts = {"labeler":"", "prepare_shutting":"", "bridge_metadata":""}
-		
 		annotations_file_exists = os.path.isfile(self.output_path+'via_pj_settings.json')
 
 		if annotations_file_exists:
@@ -102,9 +99,14 @@ class ScreenShutter:
 			driver.execute_script(scripts["prepare_shutting"])
 
 			if self.full_screenshot:
-				img = full_screenshutter.full_Screenshot(driver, save_path=self.output_path+"images/", image_name=save_name)
+				# Nice trick by https://www.tutorialspoint.com/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
+				max_width = driver.execute_script('return document.body.parentNode.scrollWidth')
+				max_height = driver.execute_script('return document.body.parentNode.scrollHeight')
+				driver.set_window_size(max_width, max_height)
+				driver.find_element(By.TAG_NAME,'body').screenshot(self.output_path+"images/"+save_name)  
+				driver.set_window_size(window_width, window_height)
 			else:
-				driver.find_element_by_tag_name('body').screenshot(self.output_path+"images/"+save_name)  
+				driver.find_element(By.TAG_NAME,'body').screenshot(self.output_path+"images/"+save_name)  
 
 			img_file_size = os.path.getsize(self.output_path+"images/"+save_name)
 

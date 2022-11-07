@@ -80,12 +80,12 @@ class PlaceholderElement(HtmlElement):
 		style_string = ""
 		size_string = ""
 		if self.width is not None:
-			style_string += "width: "+str(self.width)+self.measure_unit+";"
-			size_string += str(self.width)+(self.measure_unit if self.measure_unit != MeasureUnit.Px else "")
+			style_string += "width: "+str(self.width)+self.measure_unit.value+";"
+			size_string += str(self.width)+(self.measure_unit.value if self.measure_unit != MeasureUnit.Px else "")
 
 		if self.height is not None:
-			style_string += "height: "+str(self.height)+self.measure_unit+";"
-			size_string += ("x" if self.measure_unit == MeasureUnit.Px else " X ")+str(self.height)+(self.measure_unit if self.measure_unit != MeasureUnit.Px else "")
+			style_string += "height: "+str(self.height)+self.measure_unit.value+";"
+			size_string += ("x" if self.measure_unit == MeasureUnit.Px else " X ")+str(self.height)+(self.measure_unit.value if self.measure_unit != MeasureUnit.Px else "")
 		
 		self.attributes["style"] = style_string
 
@@ -337,7 +337,7 @@ class FormElement(HtmlElement): #TODO: Add extra options for form construction
 					for opt in ele["choices"]:
 						opt_id = ele_id+"_"+ElementsUtils.idefy(opt)
 						with div(cls="form-check"):
-							input(cls="form-check-input", type="radio", name=ele_id, 
+							input_(cls="form-check-input", type="radio", name=ele_id, 
 							id=opt_id
 							)
 							label(opt,cls="form-check-label",_for=opt_id)
@@ -355,16 +355,16 @@ class FormElement(HtmlElement): #TODO: Add extra options for form construction
 
 			if ele_type == ElementsChoices.InputTypes.Checkbox and is_alone_in_row:
 				with div(cls="custom-switch"):
-					input(type=ele["type"], id=ele_id, cls="custom-control-input")
+					input_(type=ele["type"], id=ele_id, cls="custom-control-input")
 					label(ele["name"],_for=ele_id, cls="custom-control-label", data_wg_type=ele["type"])
 			elif ele_type == ElementsChoices.InputTypes.Range:
 				label(ele["name"],_for=ele_id)
-				input(type=ele["type"], id=ele_id, cls="custom-range", data_wg_type=ele["type"])
+				input_(type=ele["type"], id=ele_id, cls="custom-range", data_wg_type=ele["type"])
 			elif ele_type == ElementsChoices.InputTypes.Submit:
-				input(ele["name"],type=ele["type"], id=ele_id, cls="btn btn-primary", data_wg_type=ele["type"])
+				input_(ele["name"],type=ele["type"], id=ele_id, cls="btn btn-primary", data_wg_type=ele["type"])
 			else:
 				label(ele["name"],_for=ele_id)
-				input(type=ele["type"], id=ele_id, cls="form-control", data_wg_type=ele["type"])
+				input_(type=ele["type"], id=ele_id, cls="form-control", data_wg_type=ele["type"])
 		
 
 	def build(self):
