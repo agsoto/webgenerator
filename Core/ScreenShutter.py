@@ -1,12 +1,14 @@
 import glob
 import os
+from PIL import Image
 from selenium import webdriver 
+from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
-from selenium.webdriver.support import expected_conditions as expected_conditions
-from webdriver_manager.firefox import GeckoDriverManager
+from selenium.common.exceptions import TimeoutException
 from StyleManager.ColorManager import ColorManager
 import fnmatch
-from xml.sax.saxutils import unescape, escape
 import json
 import time
 
@@ -14,7 +16,7 @@ class ScreenShutter:
 
 	def __init__(self, full_screenshot: bool = False, window_size: tuple = (1024,768), 
 		output_path:str = "./output/", input_path:str = "./output/html/", assets_path:str = "./Assets/",
-		show_progress: bool = True, driver_path=""):
+		show_progress: bool = True, driver_path:str="", same_viewport_dimensions:bool = False):
 		self.full_screenshot = full_screenshot
 		self.window_size = window_size
 		self.input_path = input_path
@@ -22,6 +24,66 @@ class ScreenShutter:
 		self.assets_path = assets_path
 		self.show_progress = show_progress
 		self.driver_path = driver_path
+		self.same_viewport_dimensions = same_viewport_dimensions
+
+	def take_screenshot(self, driver: WebDriver, full_page: bool = False, save_path: str = '', image_name: str = 'full_screenshot.png') -> str:
+		"""
+		Take full partial_screenshot of web page
+		Args:
+			driver: The Selenium web driver object
+			save_path: The path where to store partial_screenshot
+			image_name: The name of partial_screenshot image
+		Returns:
+			None
+		"""
+		total_width = driver.execute_script("return document.body.offsetWidth")
+		total_height = driver.execute_script("return document.body.parentNode.scrollHeight")
+		viewport_width = driver.execute_script("return document.body.clientWidth")
+		viewport_height = driver.execute_script("return window.innerHeight")
+		image_name = os.path.abspath(save_path + '/' + image_name)
+
+		if not full_page:
+			driver.save_screenshot(image_name)
+			if self.same_viewport_dimensions:
+				screenshot = Image.open(image_name)
+				ratio = viewport_width/screenshot.width
+				ratio_height = int(ratio*screenshot.height)
+				screenshot = screenshot.resize((viewport_width, ratio_height), Image.Resampling.LANCZOS)
+				screenshot.save(image_name)
+			return
+
+		# Tried unsuccessfully also https://www.tutorialspoint.com/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
+		# and https://www.youtube.com/watch?v=u7p-HtjbZ3Y
+		driver.execute_script("window.scrollTo(0, 0)")
+
+		final_real_height = total_height*2
+		composite_screenshot = Image.new('RGB', (total_width*2, final_real_height))
+		y = 0
+		while y < total_height:
+			x = 0
+			while x < total_width:
+				driver.execute_script(f"window.scrollTo({x}, {y})")
+
+				scroll_y = int(driver.execute_script("return window.scrollY"))
+
+				partial_shot_file_name = "temp_shot.png"
+				driver.save_screenshot(partial_shot_file_name)
+				partial_screenshot = Image.open(partial_shot_file_name)
+
+				offset = (x, scroll_y*2)
+
+				composite_screenshot.paste(partial_screenshot, offset)
+				del partial_screenshot
+				os.remove(partial_shot_file_name)
+				x = x + viewport_width
+			y = y + viewport_height 
+
+		if self.same_viewport_dimensions:
+			#window_width = driver.get_window_size()["width"]
+			ratio = viewport_width/composite_screenshot.width
+			ratio_height = int(ratio*composite_screenshot.height)
+			composite_screenshot = composite_screenshot.resize((viewport_width, ratio_height), Image.Resampling.LANCZOS)
+		composite_screenshot.save(image_name)
 
 	def capture_and_save(self,max_shoots=100000): #TODO: Refactor, a lot of messy code
 		# get a list of all the files to open
@@ -62,7 +124,6 @@ class ScreenShutter:
 			scripts["prepare_shutting"] = f.read()
 		with open(self.assets_path+"extract_meta.js", "r") as f:
 			scripts["extract_meta"] = f.read()
-
 		for html_file in html_file_list:
 			if count > max_shoots:
 				break
@@ -87,27 +148,29 @@ class ScreenShutter:
 			if palette is not None:
 				palette = json.loads(palette)
 				ColorManager.compile_color(primary=palette["primary"], secondary=palette["secondary"], light=palette["light"], 
-				 dark=palette["dark"], enable_gradients=palette["enable-gradients"])
-				driver.execute_script("window.location.reload();")
+				dark=palette["dark"], enable_gradients=palette["enable-gradients"])
+				#driver.execute_script("window.location.reload();")
 			
-			if self.full_screenshot:
-				driver.execute_script("window.screenshotHeight = "+str(window_height)+";")
+			driver.refresh()
+			driver.execute_script(f"window.sameViewportDimensions = {str(self.same_viewport_dimensions).lower()};")
+
+			if not self.full_screenshot:
+				viewport_height = driver.execute_script("return window.innerHeight")
+				annotations_height_max_limit = viewport_height if self.same_viewport_dimensions else viewport_height * 2
+				driver.execute_script("window.screenshotHeight = "+str(annotations_height_max_limit)+";")
+
+			driver.execute_script(scripts["prepare_shutting"])
 
 			if annotations_file_exists:
 				driver.execute_script(scripts["labeler"])
 
-			driver.execute_script(scripts["prepare_shutting"])
+			try:
+				WebDriverWait(driver, 3).until(EC.presence_of_element_located((By.ID, 'page-content')))
+			except TimeoutException:
+				print("Loading took too much time!")
 
-			if self.full_screenshot:
-				# Nice trick by https://www.tutorialspoint.com/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
-				max_width = driver.execute_script('return document.body.parentNode.scrollWidth')
-				max_height = driver.execute_script('return document.body.parentNode.scrollHeight')
-				driver.set_window_size(max_width, max_height)
-				driver.find_element(By.TAG_NAME,'body').screenshot(self.output_path+"images/"+save_name)  
-				driver.set_window_size(window_width, window_height)
-			else:
-				driver.find_element(By.TAG_NAME,'body').screenshot(self.output_path+"images/"+save_name)  
-
+			self.take_screenshot(driver, full_page=self.full_screenshot, save_path=self.output_path+"images/", image_name=save_name)
+				
 			img_file_size = os.path.getsize(self.output_path+"images/"+save_name)
 
 			json_variable = driver.execute_script("return window.annotations;")

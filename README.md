@@ -15,7 +15,7 @@ A full dataset of 1000 elements with 800x600 size generated with the tool can be
 
 
 # Requirements
-* Python >= 3.7 ([download here](https://www.python.org/downloads/))
+* Python >= 3.10 ([download here](https://www.python.org/downloads/))
 * Pip >= 20.0.2 ([installation instructions here](https://pip.pypa.io/en/stable/installing/))
 * Chrome / Chromium browser
 * Chrome driver
