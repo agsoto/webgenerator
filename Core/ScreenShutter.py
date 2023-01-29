@@ -16,7 +16,7 @@ class ScreenShutter:
 
 	def __init__(self, full_screenshot: bool = False, window_size: tuple = (1024,768), 
 		output_path:str = "./output/", input_path:str = "./output/html/", assets_path:str = "./Assets/",
-		show_progress: bool = True, driver_path:str="", same_viewport_dimensions:bool = False):
+		show_progress: bool = True, driver_path:str=""):
 		self.full_screenshot = full_screenshot
 		self.window_size = window_size
 		self.input_path = input_path
@@ -24,7 +24,6 @@ class ScreenShutter:
 		self.assets_path = assets_path
 		self.show_progress = show_progress
 		self.driver_path = driver_path
-		self.same_viewport_dimensions = same_viewport_dimensions
 
 	def take_screenshot(self, driver: WebDriver, full_page: bool = False, save_path: str = '', image_name: str = 'full_screenshot.png') -> str:
 		"""
@@ -44,20 +43,14 @@ class ScreenShutter:
 
 		if not full_page:
 			driver.save_screenshot(image_name)
-			if self.same_viewport_dimensions:
-				screenshot = Image.open(image_name)
-				ratio = viewport_width/screenshot.width
-				ratio_height = int(ratio*screenshot.height)
-				screenshot = screenshot.resize((viewport_width, ratio_height), Image.Resampling.LANCZOS)
-				screenshot.save(image_name)
 			return
 
 		# Tried unsuccessfully also https://www.tutorialspoint.com/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
 		# and https://www.youtube.com/watch?v=u7p-HtjbZ3Y
 		driver.execute_script("window.scrollTo(0, 0)")
 
-		final_real_height = total_height*2
-		composite_screenshot = Image.new('RGB', (total_width*2, final_real_height))
+		final_real_height = total_height
+		composite_screenshot = Image.new('RGB', (total_width, final_real_height))
 		y = 0
 		while y < total_height:
 			x = 0
@@ -70,7 +63,7 @@ class ScreenShutter:
 				driver.save_screenshot(partial_shot_file_name)
 				partial_screenshot = Image.open(partial_shot_file_name)
 
-				offset = (x, scroll_y*2)
+				offset = (x, scroll_y)
 
 				composite_screenshot.paste(partial_screenshot, offset)
 				del partial_screenshot
@@ -78,11 +71,6 @@ class ScreenShutter:
 				x = x + viewport_width
 			y = y + viewport_height 
 
-		if self.same_viewport_dimensions:
-			#window_width = driver.get_window_size()["width"]
-			ratio = viewport_width/composite_screenshot.width
-			ratio_height = int(ratio*composite_screenshot.height)
-			composite_screenshot = composite_screenshot.resize((viewport_width, ratio_height), Image.Resampling.LANCZOS)
 		composite_screenshot.save(image_name)
 
 	def capture_and_save(self,max_shoots=100000): #TODO: Refactor, a lot of messy code
@@ -97,13 +85,14 @@ class ScreenShutter:
 		index = 1
 
 		options = webdriver.ChromeOptions()
+		#WARNING: Changing headless to False will cause fullscrenshot to be broken
+		#	this is because the screenshot takes the dimensions of the screen resolution
 		options.headless = True 
 		
 		if self.driver_path != "":
 			driver = webdriver.Chrome(options=options, executable_path=self.driver_path)
 		else:
 			driver = webdriver.Chrome(options=options)
-		driver.set_window_size(window_width, window_height)
 
 		tic = time.time()
 		count = 0 
@@ -152,12 +141,9 @@ class ScreenShutter:
 				#driver.execute_script("window.location.reload();")
 			
 			driver.refresh()
-			driver.execute_script(f"window.sameViewportDimensions = {str(self.same_viewport_dimensions).lower()};")
 
 			if not self.full_screenshot:
-				viewport_height = driver.execute_script("return window.innerHeight")
-				annotations_height_max_limit = viewport_height if self.same_viewport_dimensions else viewport_height * 2
-				driver.execute_script("window.screenshotHeight = "+str(annotations_height_max_limit)+";")
+				driver.execute_script("window.screenshotHeight = "+str(window_height)+";")
 
 			driver.execute_script(scripts["prepare_shutting"])
 

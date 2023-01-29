@@ -3,19 +3,17 @@ COLLAPSED_SIDEBAR_BOOTSTRAP_BREAKPOINT = 768;
 
 $(document).ready(function() {
 
-    function annotate(element, sameViewportDimensions) {
+    function annotate(element) {
       var position = element.offset();
       var width = element.innerWidth();
       var height = element.innerHeight();
-      var dimensionsFactor = 2;
-      if (sameViewportDimensions) dimensionsFactor = 1;
 
       var rect = {
         name: "rect",
-        x: parseInt(position.left*dimensionsFactor),
-        y: parseInt(position.top*dimensionsFactor),
-        width: parseInt(width*dimensionsFactor),
-        height: parseInt(height*dimensionsFactor)
+        x: parseInt(position.left),
+        y: parseInt(position.top),
+        width: parseInt(width),
+        height: parseInt(height)
       };
 
       var region = {
@@ -45,12 +43,12 @@ $(document).ready(function() {
     var screenshotHeight = window.screenshotHeight;
 
     if(typeof screenshotHeight === 'undefined'){ //Simplify screenshot height logic, not set means fullscreen
-      screenshotHeight = document.body.scrollHeight*2;
+      screenshotHeight = document.body.scrollHeight;
     }
 
     $('[data-wg-type]').each(function(i,ele) { 
         if($(ele).offset().top < screenshotHeight && !isACollapsedSidebar($(ele).data("wg-type"))){
-          let newAnnotation = annotate($(ele), window.sameViewportDimensions);
+          let newAnnotation = annotate($(ele));
           if((newAnnotation.shape_attributes.y+newAnnotation.shape_attributes.height) > screenshotHeight){
             newAnnotation.shape_attributes.height = screenshotHeight-newAnnotation.shape_attributes.y;
           }
