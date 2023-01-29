@@ -2,6 +2,8 @@ from shutil import copy
 import shutil
 import stat
 import os
+import glob
+import fnmatch
 
 class FileManager:
 	@staticmethod
@@ -49,6 +51,21 @@ class FileManager:
 				os.remove(filename)
 			for name in dirs:
 				os.rmdir(os.path.join(root, name))
+
+	@staticmethod
+	def get_html_paths_list(html_files_relative_path: str) -> list[int]:
+		return glob.glob(os.path.join(os.getcwd(), html_files_relative_path+'*.html'))
+
+	@staticmethod
+	def count_html_files(html_files_relative_path: str) -> int:
+		return len(fnmatch.filter(os.listdir(html_files_relative_path), '*.html'))
+
+	@staticmethod
+	def load_scripts(scripts: dict[str, str], scripts_path: str) -> dict[str, str]:
+		for script_name in scripts.keys():
+			with open(scripts_path+script_name+".js", "r") as f:
+				scripts[script_name] = f.read()
+		return scripts
 
 	@staticmethod
 	def save(filename, content):
