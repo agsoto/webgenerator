@@ -35,53 +35,71 @@ class ScreenShutter:
 			self.driver = webdriver.Chrome(options=options)
 		self.driver.set_window_size(self.window_width, self.window_height)
 
+	def get_window_page_properties(self) -> tuple[int, int, int, int]:
+		script = '''
+			return { "page_width": document.body.offsetWidth, 
+					"page_height": document.body.parentNode.scrollHeight,
+					"viewport_width": document.body.clientWidth,
+					"viewport_height": window.innerHeight
+			};
+		'''
+		page_properties: dict = self.driver.execute_script(script)
+
+		return page_properties["page_width"], page_properties["page_height"], page_properties["viewport_width"], page_properties["viewport_height"]
+
 	def take_screenshot(self, full_page: bool = False, save_path: str = '', image_name: str = 'full_screenshot.png'):
 		"""
-		Takes a screenshot of the current webpage
+			Takes a screenshot of the current webpage. Fullpage shutting is made scrolling down
+			the page, taking multiple screenshots and merging the images.
 		Args:
-			driver: The Selenium web driver object
+			full_page: Determines if the screenshot is taken with the total height of the page
 			save_path: The path where to store partial_screenshot
 			image_name: The name of partial_screenshot image
 		Returns:
 			None
 		"""
-		total_width: int = self.driver.execute_script("return document.body.offsetWidth")
-		total_height: int = self.driver.execute_script("return document.body.parentNode.scrollHeight")
-		viewport_width: int = self.driver.execute_script("return document.body.clientWidth")
-		viewport_height: int = self.driver.execute_script("return window.innerHeight")
-		image_name = os.path.abspath(save_path + '/' + image_name)
+		def create_new_blank_canvas(page_width, page_height):
+			return Image.new('RGB', (page_width, page_height))
+
+		def get_current_scroll():
+			return int(self.driver.execute_script("return window.scrollY"))
+
+		def scroll_to(y, x):
+			self.driver.execute_script(f"window.scrollTo({x}, {y})")
+
+		def append_temp_shot(composite_screenshot):
+			temp_partial_shot_file_name = "temp_partial_shot.png"
+			self.driver.save_screenshot(temp_partial_shot_file_name)
+			temp_partial_shot = Image.open(temp_partial_shot_file_name)
+			composite_screenshot.paste(temp_partial_shot, offset)
+			del temp_partial_shot
+			os.remove(temp_partial_shot_file_name)
+
+		page_width, page_height, viewport_width, viewport_height = self.get_window_page_properties()
+		new_image_full_path = os.path.abspath(save_path + '/' + image_name)
 
 		if not full_page:
-			self.driver.save_screenshot(image_name)
-			return
+			self.driver.save_screenshot(new_image_full_path)
+			return 
 
-		# Tried unsuccessfully also https://www.tutorialspoint.com/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
-		# and https://www.youtube.com/watch?v=u7p-HtjbZ3Y
-		self.driver.execute_script("window.scrollTo(0, 0)")
+		# For the full page screenshot we tried unsuccessfully: https://www.tutorialspoint.com/take-screenshot-of-full-page-with-selenium-python-with-chromedriver
+		#  and https://www.youtube.com/watch?v=u7p-HtjbZ3Y
+		scroll_to(0, 0) 
 
-		final_real_height = total_height
-		composite_screenshot = Image.new('RGB', (total_width, final_real_height))
+		composite_screenshot = create_new_blank_canvas(page_width, page_height)
 		y = 0
-		while y < total_height:
+		while y < page_height:
 			x = 0
-			while x < total_width:
-				self.driver.execute_script(f"window.scrollTo({x}, {y})")
-
-				scroll_y = int(self.driver.execute_script("return window.scrollY"))
-
-				partial_shot_file_name = "temp_shot.png"
-				self.driver.save_screenshot(partial_shot_file_name)
-				partial_screenshot = Image.open(partial_shot_file_name)
-
+			while x < page_width:
+				scroll_to(y, x)
+				scroll_y = get_current_scroll()
 				offset = (x, scroll_y)
-
-				composite_screenshot.paste(partial_screenshot, offset)
-				del partial_screenshot
-				os.remove(partial_shot_file_name)
+				append_temp_shot(composite_screenshot)
 				x = x + viewport_width
 			y = y + viewport_height 
 
-		composite_screenshot.save(image_name)
+		composite_screenshot.save(new_image_full_path)
+
 
 	def capture_and_save(self,annotate:bool=True, max_shoots:int=100000): #TODO: Refactor, a lot of messy code
 		files_count = FileManager.count_html_files(self.input_path)
