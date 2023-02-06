@@ -1,16 +1,15 @@
 import os
+import json
+import time
 from PIL import Image
 from selenium import webdriver 
-from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.common.exceptions import TimeoutException
 from Core.Annotator import Annotator
 from StyleManager.ColorManager import ColorManager
 from Core.FileManager import FileManager
-import json
-import time
 
 class ScreenShutter:
 
@@ -100,63 +99,82 @@ class ScreenShutter:
 
 		composite_screenshot.save(new_image_full_path)
 
+	def capture_and_save(self, annotate:bool=True, max_shoots:int=100000): 
 
-	def capture_and_save(self,annotate:bool=True, max_shoots:int=100000): #TODO: Refactor, a lot of messy code
+		def get_webpage_metadata():
+			webpage_metadata = self.driver.execute_script('return { "palette": window.palette, "layout_type": window.layout }')
+			return webpage_metadata["layout_type"], webpage_metadata["palette"] 
+
+		def set_max_height_for_javascript_annotator(max_height):
+			self.driver.execute_script("window.screenshotHeight = "+str(max_height)+";")
+
+		def wait_for_page_content(seconds=3, page_content_id='page-content'):
+			try:
+				WebDriverWait(self.driver, seconds).until(EC.presence_of_element_located((By.ID, page_content_id)))
+			except TimeoutException:
+				print("Loading took too much time!")
+
+		def execute_scripts_on_browser(scripts):
+			for script in scripts.values():
+				self.driver.execute_script(script)
+
+		def load_html_file_on_browser(html_file_path):
+			self.driver.get("file://"+html_file_path)
+
+		def get_current_screenshot_file_name(html_file_path):
+			return os.path.basename(html_file_path)[:-5] + '.png'
+
+		def get_json_annotations():
+			return self.driver.execute_script("return window.annotations;")
+
 		files_count = FileManager.count_html_files(self.input_path)
 		html_files_paths = FileManager.get_html_paths_list(self.input_path)
 		annotator = None
 		tic, count = time.time(), 0
 
 		scripts = {"annotations_maker":"", "prepare_shutting":"", "extract_meta":""}
-		FileManager.load_scripts(scripts, self.assets_path)
-
+		FileManager.read_scripts_from_js_files(scripts, self.assets_path)
+		
 		if annotate:
 			annotator = Annotator(self.assets_path, self.output_path)
 			
 		for html_file_path in html_files_paths:
-			if count > max_shoots:
-				break
-			else:
-				count += 1
-				if self.show_progress:
-					progress = round(count/files_count, 2)*100
-					print("{0}/{1} files generated [{2}%]".format(count,files_count,progress))
+			if count > max_shoots: break
+			count += 1
 
-			self.driver.get("file://"+html_file_path)
-			image_name = os.path.basename(html_file_path)[:-5] + '.png'
-			
-			self.driver.execute_script(scripts["extract_meta"])
-			
-			palette = self.driver.execute_script("return window.palette;")
-			self.apply_color_palette(palette)
+			if self.show_progress: 
+				print(f"{count}/{files_count} screenshots generated [{round(count/files_count, 2)*100}%]")
+
+			load_html_file_on_browser(html_file_path)
 
 			if not self.full_screenshot:
-				self.driver.execute_script("window.screenshotHeight = "+str(self.window_height)+";")
+				set_max_height_for_javascript_annotator(self.window_height)
 
+			self.driver.execute_script(scripts["extract_meta"])
+			layout_type, palette = get_webpage_metadata()
+
+			self.compile_css_color_palette(palette)
+			self.driver.refresh()
+
+			wait_for_page_content()
 			self.driver.execute_script(scripts["prepare_shutting"])
 			self.driver.execute_script(scripts["annotations_maker"])
 
-			try:
-				WebDriverWait(self.driver, 3).until(EC.presence_of_element_located((By.ID, 'page-content')))
-			except TimeoutException:
-				print("Loading took too much time!")
-
-			self.take_screenshot(full_page=self.full_screenshot, save_path=self.output_path+"images/", image_name=image_name)
-			if annotate and annotator:	
-				img_file_size = os.path.getsize(self.output_path+"images/"+image_name)
-				layout_type = self.driver.execute_script("return window.layout;")
-				json_annotation = self.driver.execute_script("return window.annotations;")
-				annotator.add_annotation(image_name, img_file_size, json_annotation, layout_type)
+			screenshot_file_name = get_current_screenshot_file_name(html_file_path)
+			self.take_screenshot(full_page=self.full_screenshot, save_path=self.output_path+"images/", image_name=screenshot_file_name)
+			if annotate and annotator:
+				img_file_size = os.path.getsize(self.output_path+"images/"+screenshot_file_name)
+				json_annotations = get_json_annotations()
+				annotator.add_annotation(screenshot_file_name, img_file_size, json_annotations, layout_type)
 
 		tac = time.time()
-		print("Generated {0} PNG files in {1} seconds. Files are in {2}.".format(count,round(tac-tic, 1),self.output_path))
+		print(f"Generated {count} PNG files in {str(round(tac-tic, 1))} seconds. Files are in {self.output_path}.")
 
-	def apply_color_palette(self, palette: str):
+	def compile_css_color_palette(self, palette: str | None):
 		if palette is not None:
 			palette = json.loads(palette)
 			ColorManager.compile_color(primary=palette["primary"], secondary=palette["secondary"], light=palette["light"], 
 						dark=palette["dark"], enable_gradients=palette["enable-gradients"])
-			self.driver.refresh()
 
 	def __del__(self) -> None:
 		self.driver.quit()

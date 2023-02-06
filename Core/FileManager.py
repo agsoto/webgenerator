@@ -61,7 +61,7 @@ class FileManager:
 		return len(fnmatch.filter(os.listdir(html_files_relative_path), '*.html'))
 
 	@staticmethod
-	def load_scripts(scripts: dict[str, str], scripts_path: str) -> dict[str, str]:
+	def read_scripts_from_js_files(scripts: dict[str, str], scripts_path: str) -> dict[str, str]:
 		for script_name in scripts.keys():
 			with open(scripts_path+script_name+".js", "r") as f:
 				scripts[script_name] = f.read()
